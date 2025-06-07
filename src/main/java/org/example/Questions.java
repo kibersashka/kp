@@ -91,50 +91,39 @@ public class Questions implements Serializable {
     }
 
 
-    public void createQuest(){
+    public static void createQuest(Questions questions){
         //создали вопросы и записали их в файл
 
         try(ObjectOutputStream ois = new ObjectOutputStream(new FileOutputStream("questions.txt"))){
-            ois.writeObject(creatAsk());
+            ois.writeObject(questions);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
-    public Questions creatAsk(){
+    public static Questions creatAsk(){
         Questions questions = new Questions();
-        questions.setQuestion1("ask 1");
-        questions.setQuestion2("ask 2");
-        questions.setQuestion3("ask 3");
+        questions.setQuestion1("Угадайте число от 0 до 2");
+        questions.setRespones1(new String[] {"0", "1", "2"});
         questions.setGoodResponseIndex1(0);
+        questions.setQuestion2("Угадайте, как зовут создателя");
+        questions.setRespones2(new String[] {"Камиль", "Артем", "Саша"});
         questions.setGoodResponseIndex2(0);
+        questions.setQuestion3("Угадайте букву от A до С");
+        questions.setRespones3(new String[] {"A", "B", "C"});
         questions.setGoodResponseIndex3(0);
-        questions.setRespones1(new String[]{"1", "2", "3"});
-        questions.setRespones2(new String[]{"1", "2", "3"});
-        questions.setRespones3(new String[]{"1", "2", "3"});
         return questions;
     }
-    public void readQuestions() {//считываем
+    public static Questions readQuestions() {//считываем
 
-        try(DataInputStream dis = new DataInputStream(new FileInputStream("questions.txt"))){
-            question1 = dis.readLine();
-            respones1 = new String[]{dis.readLine()};
-            goodResponseIndex1 = dis.readInt();
-            question2 = dis.readLine();
-            respones2 = new String[]{dis.readLine()};
-            goodResponseIndex2 = dis.readInt();
-            question3 = dis.readLine();
-            respones3 = new String[]{dis.readLine()};
-            goodResponseIndex3 = dis.readInt();
-
-
-
+        Questions questions;
+        try (ObjectInputStream oos = new ObjectInputStream((new FileInputStream("questions.txt")))) {
+            questions = (Questions) oos.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-
-
+        return questions;
     }
-
-
 }
